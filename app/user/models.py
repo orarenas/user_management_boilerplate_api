@@ -23,7 +23,7 @@ class UserRoles(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("user.id"))
     role_id = Column(Integer, ForeignKey("role.id"))
-    active_role = Column(Boolean, nullable=False)
+    active_role = Column(Boolean, nullable=False) # change to default_role
     date_created = Column(TIMESTAMP, nullable=False)
     date_updated = Column(TIMESTAMP, nullable=True)
     created_by = Column(String(100), nullable=False)

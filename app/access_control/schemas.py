@@ -15,7 +15,7 @@ class PermissionCategory(PermissionCategoryBase):
     id: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 class PermissionBase(BaseModel):
     permission: str
@@ -31,14 +31,20 @@ class Permission(PermissionBase):
     permission_category: PermissionCategory = []
 
     class Config:
-        from_attributes = True
+        orm_mode = True
+
+class PermissionOnly(BaseModel):
+    permission: str
+    
+    class Config:
+        orm_mode = True
 
 class PermissionDescription(BaseModel):
     permission: str
     permission_description: str
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 class RolePermissionsBase(BaseModel):
     date_created: datetime
@@ -53,7 +59,13 @@ class RolePermissions(RolePermissionsBase):
     permission: PermissionDescription = []
 
     class Config:
-        from_attributes = True
+        orm_mode = True
+
+class RolePermissionsOnly(BaseModel):
+    permission: PermissionOnly = []
+
+    class Config:
+        orm_mode = True
 
 class RoleBase(BaseModel):
     role: str
@@ -67,5 +79,13 @@ class RoleCreate(RoleBase):
 class Role(RoleBase):
     id: int
     role_permissions: List[RolePermissions] = []
+
     class Config:
-        from_attributes = True
+        orm_mode = True
+
+class RoleOnly(BaseModel):
+    role: str
+    role_permissions: List[RolePermissionsOnly] = []
+
+    class Config:
+        orm_mode = True

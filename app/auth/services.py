@@ -9,7 +9,7 @@ from fastapi import Depends, HTTPException, Security, status
 from fastapi.security import OAuth2PasswordBearer, SecurityScopes
 from sqlalchemy.orm import Session
 
-from app.user.models import User
+from app.user.models import User, UserRoles
 from app.auth.schemas import TokenData
 from app.auth.config import Settings
 
@@ -40,6 +40,15 @@ def authenticate_user(user: User, password: str):
     if not verify_password(password, user.hashed_password):
         return False
     return user
+
+def get_user_active_permissions(user_id: int, db: Session):
+        permissions = db.query(UserRoles).filter(UserRoles.active_role == True).filter(UserRoles.user_id == user_id).all() 
+        scope = []
+
+        for item in permissions[0].role.role_permissions:
+            scope.append(item.permission.permission)
+            
+        return scope
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
@@ -78,14 +87,16 @@ async def get_current_user(security_scopes: SecurityScopes, token: Annotated[str
         username: str = payload.get("sub")
         if username is None:
             raise credentials_exception
-        token_scopes = payload.get("scopes", [])
-        token_data = TokenData(scopes=token_scopes,username=username)
+        token_data = TokenData(username=username)
     except (JWTError, ValidationError):
         raise credentials_exception
     
     user = get_user_authenticated(token_data.username, db)
     if user is None:
         raise credentials_exception
+    
+    token_data.scopes = get_user_active_permissions(user.id, db)
+
     for scope in security_scopes.scopes:
         if scope not in token_data.scopes:
             raise HTTPException(
@@ -93,15 +104,15 @@ async def get_current_user(security_scopes: SecurityScopes, token: Annotated[str
                 detail="Not enough permissions",
                 headers={"WWW-Authenticate": authenticate_value}
             )
-    return token_data
+    return user
 
 async def get_current_active_user(current_user: Annotated[User, Security(get_current_user, scopes=["me"])]):
     """ if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user") """
     return current_user
 
-async def get_sample(current_user: Annotated[User, Security(get_current_user, scopes=["me"])]):
+async def get_quality_procedure(current_user: Annotated[User, Security(get_current_user, scopes=["view_quality_procedure"])]):
     """ if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user") """
-    return current_user
+    return "Planning Control Procedure"
 

@@ -20,6 +20,12 @@ class UserRoles(UserRolesBase):
     class Config:
         orm_mode = True
 
+class UserPermissions(BaseModel):
+    role: RoleOnly
+
+    class Config:
+        orm_mode = True
+
 class UserBase(BaseModel):
     first_name: str
     last_name: str

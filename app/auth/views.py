@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from app.deps import get_db
 
 from app.auth.schemas import Token
-from app.auth.services import authenticate_user, get_user_authenticated, create_access_token, get_current_active_user
+from app.auth.services import authenticate_user, get_user_authenticated, create_access_token, get_current_active_user, get_quality_procedure
 
 from app.user.schemas import User
 
@@ -45,5 +45,5 @@ async def read_users_me(current_user: Annotated[User, Depends(get_current_active
 
 @auth_router.get(
     "/sample/")
-async def read_sample(current_user: Annotated[User, Depends(get_current_active_user)]):
+async def read_sample(current_user: Annotated[User, Depends(get_quality_procedure)]):
     return current_user

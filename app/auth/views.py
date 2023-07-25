@@ -29,7 +29,7 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
         )
     
     access_token_expires = timedelta(minutes=60      )
-    access_token = create_access_token(data={"sub":  user.username}, expires_delta=access_token_expires)
+    access_token = create_access_token(data={"sub":  user.username, "scopes": form_data.scopes}, expires_delta=access_token_expires)
 
     return {"access_token": access_token, "token_type": "bearer"} 
 
@@ -41,4 +41,9 @@ async def logout(response: Response):
     "/users/me/",
     response_model=User)
 async def read_users_me(current_user: Annotated[User, Depends(get_current_active_user)]):
+    return current_user
+
+@auth_router.get(
+    "/sample/")
+async def read_sample(current_user: Annotated[User, Depends(get_current_active_user)]):
     return current_user

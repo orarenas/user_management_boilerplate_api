@@ -15,6 +15,7 @@ class Role(Base):
     #updated_by = Column(String(100), nullable=True)
 
     role_permissions = relationship("RolePermissions", back_populates="role")
+    user_roles = relationship("UserRoles", back_populates="role")
 
 class PermissionCategory(Base):
     __tablename__ = "permission_category"

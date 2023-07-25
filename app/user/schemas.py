@@ -20,3 +20,11 @@ class User(UserBase):
 
 class UserAuthenticate(User):
     hashed_password: str
+
+class UserRolesBase(BaseModel):
+    role_id: int
+    date_created: datetime
+    created_by: str
+
+class UserRolesCreate(UserRolesBase):
+    user_id: int

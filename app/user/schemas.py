@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from app.access_control.schemas import RoleOnly
 
 class UserRolesBase(BaseModel):
-    active_role: bool
+    default_role: bool
     date_created: datetime
     created_by: str
 
@@ -38,7 +38,7 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
-    user_roles: List[UserRoles] = []
+    role: RoleOnly = []
 
     class Config:
         orm_mode = True    

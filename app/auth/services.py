@@ -41,11 +41,10 @@ def authenticate_user(user: User, password: str):
         return False
     return user
 
-def get_user_active_permissions(user_id: int, db: Session):
-        permissions = db.query(UserRoles).filter(UserRoles.active_role == True).filter(UserRoles.user_id == user_id).all() 
+def get_user_active_permissions(permissions: dict):
         scope = []
 
-        for item in permissions[0].role.role_permissions:
+        for item in permissions:
             scope.append(item.permission.permission)
             
         return scope
@@ -94,8 +93,8 @@ async def get_current_user(security_scopes: SecurityScopes, token: Annotated[str
     user = get_user_authenticated(token_data.username, db)
     if user is None:
         raise credentials_exception
-    
-    token_data.scopes = get_user_active_permissions(user.id, db)
+
+    token_data.scopes = get_user_active_permissions(user.role.role_permissions)
 
     for scope in security_scopes.scopes:
         if scope not in token_data.scopes:
@@ -114,5 +113,5 @@ async def get_current_active_user(current_user: Annotated[User, Depends(get_curr
 async def get_quality_procedure(current_user: Annotated[User, Security(get_current_user, scopes=["view_quality_procedure"])]):
     """ if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user") """
-    return "Planning Control Procedure"
+    return current_user
 

@@ -16,6 +16,7 @@ class Role(Base):
 
     role_permissions = relationship("RolePermissions", back_populates="role")
     user_roles = relationship("UserRoles", back_populates="role")
+    user = relationship("User", back_populates="role")
 
 class PermissionCategory(Base):
     __tablename__ = "permission_category"

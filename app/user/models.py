@@ -11,11 +11,13 @@ class User(Base):
     last_name = Column(String(75), nullable=False)
     username = Column(String(100), nullable=False)
     hashed_password = Column(String(100), nullable=False)
+    active_role_id = Column(Integer, ForeignKey("role.id"), nullable=True)
     date_created = Column(TIMESTAMP, nullable=False)
     date_updated = Column(TIMESTAMP, nullable=True)
     created_by = Column(String(100), nullable=False)
 
     user_roles = relationship("UserRoles", back_populates="user")
+    role = relationship("Role", back_populates="user")
 
 class UserRoles(Base):
     __tablename__ ="user_roles"
@@ -23,7 +25,7 @@ class UserRoles(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("user.id"))
     role_id = Column(Integer, ForeignKey("role.id"))
-    active_role = Column(Boolean, nullable=False) # change to default_role
+    default_role = Column(Boolean, nullable=False)
     date_created = Column(TIMESTAMP, nullable=False)
     date_updated = Column(TIMESTAMP, nullable=True)
     created_by = Column(String(100), nullable=False)

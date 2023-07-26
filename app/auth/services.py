@@ -54,20 +54,20 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=60)
+        expire = datetime.utcnow() + timedelta(minutes=0.5)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, Settings.authjwt_secret_key, algorithm=Settings.authjwt_algorithm)
     return encoded_jwt
 
-""" def create_refresh_token(data: dict, expires_delta: Union[timedelta, None] = None):
+def create_refresh_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=2)
+        expire = datetime.utcnow() + timedelta(minutes=1)
     to_encode.update({"exp":expire})
     encoded_jwt = jwt.encode(to_encode, Settings.authjwt_refresh_secret_key, algorithm=Settings.authjwt_algorithm)
-    return encoded_jwt """
+    return encoded_jwt
 
 async def get_current_user(security_scopes: SecurityScopes, token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)):
     if security_scopes.scopes:

@@ -41,7 +41,7 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
 
 @auth_router.post("/refresh")
 async def refresh_token(refresh_token: RefreshToken):
-
+    #need to find decorator
     try:
         payload = jwt.decode(refresh_token.refresh_token, Settings.authjwt_refresh_secret_key, algorithms=[Settings.authjwt_algorithm])
         access_token = create_access_token(data={"sub":  payload.get("sub")}, expires_delta=timedelta(minutes=0.5))

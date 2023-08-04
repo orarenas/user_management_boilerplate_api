@@ -2,7 +2,7 @@ from typing import List
 from datetime import datetime
 from pydantic import BaseModel
 
-from app.access_control.schemas import RoleOnly
+from app.access_control.schemas import RoleOnly, RoleName
 
 class UserRolesBase(BaseModel):
     default_role: bool
@@ -19,6 +19,10 @@ class UserRoles(UserRolesBase):
 
     class Config:
         orm_mode = True
+
+class UserListOfRoles(UserRolesBase):
+    id: int
+    role: RoleName
 
 class UserPermissions(BaseModel):
     role: RoleOnly
@@ -42,6 +46,13 @@ class User(UserBase):
 
     class Config:
         orm_mode = True    
+
+class UserListedRoles(UserBase):
+    id: int
+    user_roles: List[UserListOfRoles] = []
+
+    class Config:
+        orm_mode = True
 
 class UserAuthenticate(User):
     hashed_password: str

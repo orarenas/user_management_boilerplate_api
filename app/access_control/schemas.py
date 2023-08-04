@@ -89,3 +89,10 @@ class RoleOnly(BaseModel):
 
     class Config:
         orm_mode = True
+
+# TEMPORARY CLASS NAME
+class RoleName(BaseModel):
+    role: str
+
+    class Config:
+        orm_mode = True

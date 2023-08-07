@@ -92,6 +92,7 @@ class RoleOnly(BaseModel):
 
 # TEMPORARY CLASS NAME
 class RoleName(BaseModel):
+    id: int
     role: str
 
     class Config:

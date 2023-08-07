@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, status
 
 from sqlalchemy.orm import Session
 
-from app.user.schemas import User, UserCreate, UserRoles, UserRolesCreate,  UserListedRoles
+from app.user.schemas import User, UserCreate, UserRoles, UserRolesCreate,  UserListedRoles, UpdateUserActiveRole
 from app.user.services import UserManager, UserRolesManager
 from app.deps import get_db
 
@@ -26,6 +26,14 @@ def get_all_users(db: Session = Depends(get_db)):
 def get_all_users_with_roles(db: Session = Depends(get_db)):
     return UserManager.get_all_users(db)
 
+@user_router.get(
+    "/{id}",
+    response_model=UserListedRoles,
+    status_code=status.HTTP_200_OK
+)
+def get_user_by_id(id: int, db: Session = Depends(get_db)):
+    return UserManager.get_user_by_id(db, id)
+
 @user_router.post(
     "",
     response_model=User,
@@ -33,6 +41,14 @@ def get_all_users_with_roles(db: Session = Depends(get_db)):
 )
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     return UserManager.create_user(db, user)
+
+@user_router.patch(
+    "/{user_id}",
+    response_model=User,
+    status_code=status.HTTP_200_OK
+)
+def update_user_active_role(user_id: int, user: UpdateUserActiveRole, db: Session = Depends(get_db)):
+    return UserManager.update_user_active_role(db, user_id, user)
 
 @user_router.get(
     "/user-roles",

@@ -45,10 +45,19 @@ class User(UserBase):
     role: RoleOnly = []
 
     class Config:
-        orm_mode = True    
+        orm_mode = True  
 
+class UpdateUserActiveRole(BaseModel):
+    active_role_id: int
+    date_updated: datetime
+
+    class Config:
+        orm_mode = True
+
+#TEMPORARY SCHEMA
 class UserListedRoles(UserBase):
     id: int
+    active_role_id: int
     user_roles: List[UserListOfRoles] = []
 
     class Config:

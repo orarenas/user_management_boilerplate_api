@@ -26,9 +26,18 @@ def get_all_users(db: Session = Depends(get_db)):
 def get_all_users_with_roles(db: Session = Depends(get_db)):
     return UserManager.get_all_users(db)
 
+# TEMPORARY ROUTE
+@user_router.get(
+    "/{user_id}/listed-roles",
+    response_model=UserListedRoles,
+    status_code=status.HTTP_200_OK
+)
+def get_user_and_roles(user_id: int, db: Session = Depends(get_db)):
+    return UserManager.get_user_by_id(db, user_id)
+
 @user_router.get(
     "/{id}",
-    response_model=UserListedRoles,
+    response_model=User,
     status_code=status.HTTP_200_OK
 )
 def get_user_by_id(id: int, db: Session = Depends(get_db)):

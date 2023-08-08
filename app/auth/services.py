@@ -54,7 +54,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=0.5)
+        expire = datetime.utcnow() + timedelta(minutes=30)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, Settings.authjwt_secret_key, algorithm=Settings.authjwt_algorithm)
     return encoded_jwt
@@ -64,7 +64,7 @@ def create_refresh_token(data: dict, expires_delta: timedelta | None = None):
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=1)
+        expire = datetime.utcnow() + timedelta(minutes=40)
     to_encode.update({"exp":expire})
     encoded_jwt = jwt.encode(to_encode, Settings.authjwt_refresh_secret_key, algorithm=Settings.authjwt_algorithm)
     return encoded_jwt

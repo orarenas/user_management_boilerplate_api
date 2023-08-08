@@ -32,8 +32,8 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
             headers={"WWW-Authenticate": "Bearer"}
         )
     
-    access_token_expires = timedelta(minutes=0.5)
-    refresh_token_expires = timedelta(minutes=2)
+    access_token_expires = timedelta(minutes=30)
+    refresh_token_expires = timedelta(minutes=40)
     access_token = create_access_token(data={"sub":  user.username}, expires_delta=access_token_expires)
     refresh_token = create_refresh_token(data={"sub":  user.username}, expires_delta=refresh_token_expires)
 
@@ -53,13 +53,7 @@ async def refresh_token(refresh_token: RefreshToken):
 
 @auth_router.post("/logout")
 async def logout(response: Response):
-    return {"access_token": response.delete_cookie("access_token"), "refresh_token": response.delete_cookie("access_token"), "token_type": "bearer"} 
-
-@auth_router.get(
-    "/users/me/",
-    response_model=User)
-async def read_users_me(current_user: Annotated[User, Depends(get_current_active_user)]):
-    return current_user
+    return {"access_token": response.delete_cookie("access_token"), "refresh_token": response.delete_cookie("refresh_token"), "token_type": "bearer"} 
 
 @auth_router.get(
     "/sample/")

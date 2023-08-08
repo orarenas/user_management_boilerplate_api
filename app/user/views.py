@@ -1,11 +1,14 @@
 from typing import List
 from fastapi import APIRouter, Depends, status
+from typing import Annotated
 
 from sqlalchemy.orm import Session
 
 from app.user.schemas import User, UserCreate, UserRoles, UserRolesCreate,  UserListedRoles, UpdateUserActiveRole
 from app.user.services import UserManager, UserRolesManager
 from app.deps import get_db
+
+from app.auth.services import get_current_active_user
 
 user_router = APIRouter()
 
@@ -34,6 +37,13 @@ def get_all_users_with_roles(db: Session = Depends(get_db)):
 )
 def get_user_and_roles(user_id: int, db: Session = Depends(get_db)):
     return UserManager.get_user_by_id(db, user_id)
+
+#TEMPORARY ROUTE
+@user_router.get(
+    "/me",
+    response_model=User)
+async def read_users_me(current_user: Annotated[User, Depends(get_current_active_user)]):
+    return current_user
 
 @user_router.get(
     "/{id}",

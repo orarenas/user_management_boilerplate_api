@@ -38,6 +38,7 @@ class UserBase(BaseModel):
     created_by: str
 
 class UserCreate(UserBase):
+    active_role_id: int
     hashed_password: str
 
 class User(UserBase):

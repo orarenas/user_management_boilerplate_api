@@ -110,7 +110,7 @@ async def get_current_active_user(current_user: Annotated[User, Depends(get_curr
         raise HTTPException(status_code=400, detail="Inactive user") """
     return current_user
 
-async def get_quality_procedure(current_user: Annotated[User, Security(get_current_user, scopes=["view_quality_procedure"])]):
+async def get_quality_procedure(current_user: Annotated[User, Security(get_current_user, scopes=["view_reference_document"])]):
     """ if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user") """
     return current_user

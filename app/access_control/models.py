@@ -6,6 +6,7 @@ from app.database import Base
 class Role(Base):
     __tablename__ = "role"
 
+    #ADD ROLE CODE FOR TO EASILY INTEGRATE WITH VUE VISIBILITY OF ELEMENTS
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     role = Column(String(100), nullable=False)
     role_description = Column(Text, nullable=False)
